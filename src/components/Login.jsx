@@ -1,121 +1,61 @@
+import { useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router";
+
 const Login = () => {
+  const [email, setEmail] = useState("punk@gmail.com");
+  const [password, setPassword] = useState("Punk@123");
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  async function handleLogin() {
+    try {
+      const res = await axios.post("http://localhost:5000/login", {
+        email,
+        password,
+      },{
+        withCredentials: true
+      });
+      dispatch(addUser(res?.data?.data))
+      navigate('/')
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   return (
-    <div className="card w-96 bg-base-100 shadow-sm">
-      <div className="card-body">
-        <span className="badge badge-xs badge-warning">Most Popular</span>
-        <div className="flex justify-between">
-          <h2 className="text-3xl font-bold">Premium</h2>
-          <span className="text-xl">$29/mo</span>
-        </div>
-        <ul className="mt-6 flex flex-col gap-2 text-xs">
-          <li>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-4 me-2 inline-block text-success"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <span>High-resolution image generation</span>
-          </li>
-          <li>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-4 me-2 inline-block text-success"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <span>Customizable style templates</span>
-          </li>
-          <li>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-4 me-2 inline-block text-success"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <span>Batch processing capabilities</span>
-          </li>
-          <li>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-4 me-2 inline-block text-success"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <span>AI-driven image enhancements</span>
-          </li>
-          <li className="opacity-50">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-4 me-2 inline-block text-base-content/50"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <span className="line-through">Seamless cloud integration</span>
-          </li>
-          <li className="opacity-50">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-4 me-2 inline-block text-base-content/50"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <span className="line-through">Real-time collaboration tools</span>
-          </li>
-        </ul>
-        <div className="mt-6">
-          <button className="btn btn-primary btn-block">Subscribe</button>
+    <main className="flex justify-center py-10">
+      <div className="card bg-yellow-700 w-96 shadow-sm h-96">
+        <div className="card-body items-center text-center">
+          <h2 className="card-title">Login</h2>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Email</legend>
+            <input
+              type="text"
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </fieldset>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Password</legend>
+            <input
+              type="text"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </fieldset>
+          <div className="card-actions">
+            <button className="btn btn-primary" onClick={() => handleLogin()}>
+              Login
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
