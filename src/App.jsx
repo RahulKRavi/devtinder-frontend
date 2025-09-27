@@ -1,13 +1,50 @@
-import { BrowserRouter, Outlet, Route, Routes } from "react-router";
+import {
+  BrowserRouter,
+  Outlet,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 import Feed from "./components/Feed";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import appStore from "./utils/appStore";
+import { useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "./utils/constants";
+import { addUser } from "./utils/userSlice";
 
 function AppLayout() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const userData = useSelector((store) => store.user);
+
+  const fetchUser = async () => {
+    try {
+      if (userData) return;
+      const res = await axios.get(
+        BASE_URL + "/profile/view",
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(addUser(res?.data?.data));
+    } catch (err) {
+      if (err.status === 401) {
+        navigate("/login");
+      }
+      console.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   return (
     <>
       <Navbar />
