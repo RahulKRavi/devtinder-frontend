@@ -6,19 +6,19 @@ import { removeUser } from "../utils/userSlice";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  async function handleLogout(){
-    axios.post(BASE_URL + '/logout',{},{withCredentials:true})
-    dispatch(removeUser())
-    return navigate('/login')
+  async function handleLogout() {
+    await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+    dispatch(removeUser());
+    navigate("/login");
   }
 
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">DevTinder</a>
+        <Link to='/' className="btn btn-ghost text-xl">DevTinder</Link>
       </div>
       <div className="flex gap-2">
         <input
@@ -42,12 +42,20 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
-                <Link to='/profile' className="justify-between">
+                <Link to="/profile" className="justify-between">
                   Profile
                 </Link>
               </li>
               <li>
-                <a>Settings</a>
+                <Link to="/connections" className="justify-between">
+                  Connections
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/requests" className="justify-between">
+                  Requests
+                </Link>
               </li>
               <li>
                 <a onClick={handleLogout}>Logout</a>

@@ -16,6 +16,8 @@ import { useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "./utils/constants";
 import { addUser } from "./utils/userSlice";
+import Connections from "./components/Connections";
+import Requests from "./components/Requests";
 
 function AppLayout() {
   const navigate = useNavigate();
@@ -26,18 +28,15 @@ function AppLayout() {
   const fetchUser = async () => {
     try {
       if (userData) return;
-      const res = await axios.get(
-        BASE_URL + "/profile/view",
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axios.get(BASE_URL + "/profile/view", {
+        withCredentials: true,
+      });
       dispatch(addUser(res?.data?.data));
     } catch (err) {
-      if (err.status === 401) {
-        navigate("/login");
+      if (err?.response?.status === 401) {
+        return navigate("/login");
       }
-      console.error(err.message);
+      console.log("Caught Error: " + err.message);
     }
   };
 
@@ -62,6 +61,8 @@ function App() {
           <Route path="/" element={<AppLayout />}>
             <Route path="/" element={<Feed />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/connections" element={<Connections />} />
+            <Route path="/requests" element={<Requests />} />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>
