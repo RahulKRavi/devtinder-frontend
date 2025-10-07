@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
+import LargeUserCard from "./LargeUserCard";
 
 const Profile = () => {
   const user = useSelector(store => store.user)
@@ -13,16 +14,21 @@ const Profile = () => {
       [e.target.name]: e.target.value,
     });
   }
+
   async function handleUpdateProfile(userData){
     try {
-      const updatedUser = await axios.patch(BASE_URL + '/profile/edit', {...userData} , {withCredentials:true})
+      const {firstName,lastName,age,about,photoURL} = userData
+      const updatedUser = await axios.patch(BASE_URL + '/profile/edit', {firstName,lastName,age,about,photoURL} , {withCredentials:true})
     } catch (err) {
       console.log('Caught Error: ' + err.message)
     }
   }
+
   useEffect(()=>{
     setUserData(user)
   },[user])
+
+  if(!userData) return null
   return (
     <main className="flex justify-around py-10">
       {user && <>      
@@ -60,16 +66,6 @@ const Profile = () => {
             />
           </fieldset>
           <fieldset className="fieldset">
-            <legend className="fieldset-legend">Gender</legend>
-            <input
-              name="gender"
-              type="text"
-              className="input"
-              value={userData?.gender}
-              onChange={(e)=>handleChange(e)}
-            />
-          </fieldset>
-          <fieldset className="fieldset">
             <legend className="fieldset-legend">About</legend>
             <input
               name="about"
@@ -90,31 +86,14 @@ const Profile = () => {
             />
           </fieldset>
           <div className="card-actions">
-            <button className="btn btn-primary" onClick={(userData) => handleUpdateProfile(userData)}>
+            <button className="btn btn-primary" onClick={() => handleUpdateProfile(userData)}>
               Save Profile
             </button>
           </div>
         </div>
       </div>
-      <div className="card card-side w-96 bg-base-100 shadow-sm">
-        <figure>
-          <img
-            src={userData?.photoURL}
-            alt="Movie"
-          />
-        </figure>
-        <div className="card-body">
-          <h2 className="card-title">{userData?.firstName + " " +userData?.lastName}</h2>
-          <p>{userData?.about}</p>
-          <p>{userData?.age + " " + userData?.gender}</p>
-          <div className="card-actions justify-end">
-            <button className="btn btn-primary">IGNORE</button>
-          </div>
-          <div className="card-actions justify-end">
-            <button className="btn btn-primary">INTERESTED</button>
-          </div>
-        </div>
-      </div></>}
+      <LargeUserCard user={user} isButtonVisible={false}/>
+      </>}
 
     </main>
   );

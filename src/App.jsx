@@ -45,11 +45,11 @@ function AppLayout() {
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen">
       <Navbar />
       <Outlet />
       <Footer />
-    </>
+    </div>
   );
 }
 
