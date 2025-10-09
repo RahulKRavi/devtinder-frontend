@@ -8,10 +8,13 @@ import { BASE_URL } from "../utils/constants";
 const Login = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState(18)
+  const [age, setAge] = useState(18);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
+  const linkText = isLoginForm ? "New User? Sign Up Here":"Already A User"
+  const buttonText = isLoginForm ? "LOGIN":"SIGNUP"
+  const buttonAction = isLoginForm ? handleLogin : handleSignUp
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -50,32 +53,28 @@ const Login = () => {
 
   return (
     <main className="flex justify-center py-10">
-      <div className="card bg-base-300 w-96 shadow-sm">
+      <div className="card bg-base-300 shadow-sm min-w-96 min-h-96">
         <div className="card-body items-center text-center">
-          <h2 className="card-title">{isLoginForm ? "Login" : "SignUp"}</h2>
-          {!isLoginForm && (
-            <>
-              {" "}
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">FirstName</legend>
+          <h2 className="card-title">{isLoginForm ? "LOGIN" : "SIGNUP"}</h2>
+          <fieldset className="fieldset">
+            {!isLoginForm && (
+              <>
+                {" "}
+                <label className="label">FirstName</label>
                 <input
                   type="text"
                   className="input"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
-              </fieldset>
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Last Name</legend>
+                <label className="label">LastName</label>
                 <input
                   type="text"
                   className="input"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                 />
-              </fieldset>
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Age</legend>
+                <label className="label">Age</label>{" "}
                 <input
                   type="number"
                   className="input"
@@ -84,53 +83,35 @@ const Login = () => {
                   max={120}
                   onChange={(e) => setAge(Number(e.target.value))}
                 />
-              </fieldset>
-            </>
-          )}
-
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Email</legend>
-            <input
-              type="text"
-              className="input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Password</legend>
-            <input
-              type="text"
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </fieldset>
-          <div className="card-actions">
-            {isLoginForm ? (
-              <>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleLogin()}
-                >
-                  Login
-                </button>
-                <u onClick={() => setIsLoginForm(false)}>
-                  New User? Sign Up Here
-                </u>
-              </>
-            ) : (
-              <>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleSignUp()}
-                >
-                  SignUp
-                </button>
-                <u onClick={() => setIsLoginForm(true)}>Already A User</u>
               </>
             )}
-          </div>
+            <label className="label">Email</label>
+            <input
+              type="email"
+              className="input"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
+            <label className="label">Password</label>
+            <input
+              type="password"
+              className="input"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+            <div className="flex flex-col">
+              <div>
+                <a className="link link-hover" onClick={() => setIsLoginForm(!isLoginForm)}> {linkText}</a>
+              </div>
+              <button className="btn btn-neutral mt-4" onClick={() => buttonAction()}> {buttonText} </button>
+            </div>
+          </fieldset>
         </div>
       </div>
     </main>
